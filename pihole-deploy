@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# very raw script to spawn a pihole container
+# use podman generate systemd pihole afterwards
+
+# env variables documented here:
+# https://github.com/pi-hole/docker-pi-hole
+
+podman run -d \
+    --name pihole \
+    --net=host \
+    -e TZ="Europe/Prague" \
+    -v "/home/pihole/etc/:/etc/pihole/:Z" \
+    -v "/home/pihole/dnsmasq.d/:/etc/dnsmasq.d/:Z" \
+    --dns=1.1.1.1 --dns=8.8.8.8 \
+    --restart=unless-stopped \
+    --hostname pi.hole \
+    -e VIRTUAL_HOST="pihole" \
+    -e PROXY_LOCATION="pihole" \
+    -e ServerIP="192.168.1.101" \
+    -e INTERFACE="enp0s25" \
+    -e WEB_PORT="8053" \
+    -e PIHOLE_DOMAIN="zelial.cz" \
+    pihole/pihole:latest
+
+
